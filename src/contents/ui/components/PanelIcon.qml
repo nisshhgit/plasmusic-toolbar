@@ -19,16 +19,17 @@ Item {
     property bool imageReady: imageComponent.status == Image.Ready
     property string imageColor: imageColors.dominant
     property bool fallbackToIconWhenImageNotAvailable: false
+    property bool horizontal: true
     visible: type === PanelIcon.Type.Icon || imageReady || (fallbackToIconWhenImageNotAvailable && !imageReady)
 
-    implicitHeight: size
-    implicitWidth: {
-        if (type === PanelIcon.Type.Image && imageReady && imageComponent.implicitHeight > 0) {
-            return size * (imageComponent.implicitWidth / imageComponent.implicitHeight);
-        } else {
-            return size;
-        }
-    }
+    readonly property real aspectRatio: (type === PanelIcon.Type.Image && imageReady && imageComponent.implicitHeight > 0)
+    ? imageComponent.implicitWidth / imageComponent.implicitHeight
+    : 1
+
+    // Horizontal panels: height is fixed, width follows the cover's aspect ratio.
+    // Vertical panels: width is fixed, height follows it, so wide covers never overflow the panel thickness.
+    implicitHeight: horizontal ? size : size / aspectRatio
+    implicitWidth: horizontal ? size * aspectRatio : size
 
     Kirigami.Icon {
         visible: type === PanelIcon.Type.Icon || (fallbackToIconWhenImageNotAvailable && !imageReady)

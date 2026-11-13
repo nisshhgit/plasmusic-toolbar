@@ -133,7 +133,8 @@ Item {
 
         PanelIcon {
             id: panelIcon
-            visible: plasmoid.configuration.iconInPanel
+	    visible: plasmoid.configuration.iconInPanel
+	    horizontal: compact.horizontal
 
             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 
